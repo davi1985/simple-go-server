@@ -1,8 +1,6 @@
----
-# Simple Go Server 🚀
+# Simple Go Server
 
 A lightweight Go web application built to practice idiomatic project architecture, standard HTTP patterns, and native unit testing practices.
----
 
 ## Key Patterns & Learnings
 
