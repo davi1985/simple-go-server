@@ -1,3 +1,7 @@
+/*
+ * Package declaration for testing. The '_test' suffix indicates black-box testing,
+ * meaning we test the 'handler' package as an external consumer.
+ */
 package handler_test
 
 import (
@@ -7,28 +11,38 @@ import (
 	"testing"
 )
 
-// Test function for the /hello endpoint.
-// The *testing.T parameter provides methods to manage test execution and log failures.
+/*
+ * Test function for the /hello endpoint.
+ * The *testing.T parameter provides methods to manage test execution and log failures.
+ */
 func TestHelloHandler(t *testing.T) {
-	// http.NewRequest creates an in-memory simulated HTTP request.
-	// Parameters: Method (GET), Route (/hello), Request Body (nil = no body)
+	/*
+	 * http.NewRequest creates an in-memory simulated HTTP request.
+	 * Parameters: Method (GET), Route (/hello), Request Body (nil = no body)
+	 */
 	req, err := http.NewRequest(http.MethodGet, "/hello", nil)
 
-	// If request creation fails (e.g., invalid method or URL format),
-	// t.Fatalf stops the test execution immediately and prints the error.
+	/*
+	 * If request creation fails (e.g., invalid method or URL format),
+	 * t.Fatalf stops the test execution immediately and prints the error.
+	 */
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
 
-	// httptest.NewRecorder() creates a recorder implementing http.ResponseWriter.
-	// It captures the status code, response headers, and body sent back by the handler.
+	/*
+	 * httptest.NewRecorder() creates a recorder implementing http.ResponseWriter.
+	 * It captures the status code, response headers, and body sent back by the handler.
+	 */
 	rr := httptest.NewRecorder()
 
 	// Call the handler function directly, passing the recorder and the mock request.
 	handler.Hello(rr, req)
 
-	// rr.Code holds the HTTP status code returned by the handler.
-	// We check if it matches 200 OK (http.StatusOK).
+	/*
+	 * rr.Code holds the HTTP status code returned by the handler.
+	 * We check if it matches 200 OK (http.StatusOK).
+	 */
 	if status := rr.Code; status != http.StatusOK {
 		// t.Errorf logs a test failure message but DOES NOT stop remaining code execution.
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
@@ -44,14 +58,16 @@ func TestHelloHandler(t *testing.T) {
 	}
 }
 
-// Table-driven test for the /form endpoint.
-// This is the most idiomatic pattern in Go to test multiple scenarios while reusing test logic.
+/*
+ * Table-driven test for the /form endpoint.
+ * This is the most idiomatic pattern in Go to test multiple scenarios while reusing test logic.
+ */
 func TestFormHandler(t *testing.T) {
 	// Define an anonymous struct slice containing our test cases.
 	tests := []struct {
-		name           string // Scenario description
-		method         string // HTTP method to test (GET, POST, etc.)
-		expectedStatus int    // Expected HTTP status code
+		name           string
+		method         string
+		expectedStatus int
 	}{
 		// Case 1: Validating handler behavior for a GET request
 		{
@@ -69,8 +85,10 @@ func TestFormHandler(t *testing.T) {
 
 	// Iterate through the test suite using 'range'
 	for _, tt := range tests {
-		// t.Run executes a sub-test for each case in the table.
-		// It enables running and identifying individual test cases in the terminal.
+		/*
+		 * t.Run executes a sub-test for each case in the table.
+		 * It enables running and identifying individual test cases in the terminal.
+		 */
 		t.Run(tt.name, func(t *testing.T) {
 			// Create the HTTP request using the HTTP method defined for the current iteration (tt.method)
 			req, err := http.NewRequest(tt.method, "/form", nil)
